@@ -15,6 +15,8 @@ import io.vertx.ext.web.codec.BodyCodec;
 
 @RunWith(VertxUnitRunner.class)
 public class UserRouterTest {
+	/** 用于测试的id */
+	public final static String ID = "1";
 	public WebClient webClient;
 	/** 状态码的key */
 	public final static String CODE_KEY = "code";
@@ -26,14 +28,16 @@ public class UserRouterTest {
 		options.setDefaultHost("localhost").setDefaultPort(8080);
 		webClient = WebClient.create(vertx, options);
 	}
+
 	@Test
 	public void testSave(TestContext context) {
 		Async async = context.async();
 		webClient.post("/user/save")
-		.addQueryParam("id", "1")
+		.addQueryParam("id", ID)
 		.addQueryParam("name", "name")
 		.addQueryParam("tid", "1")
-		.as(BodyCodec.jsonObject()).send(res -> {
+		.as(BodyCodec.jsonObject())
+		.send(res -> {
 			if (res.succeeded()) {
 				context.assertEquals(200, res.result().statusCode());
 				JsonObject body = res.result().body();
@@ -45,14 +49,16 @@ public class UserRouterTest {
 			}
 		});
 	}
+
 	@Test
 	public void testUpdate(TestContext context) {
 		Async async = context.async();
 		webClient.post("/user/update")
-		.addQueryParam("id", "1")
+		.addQueryParam("id", ID)
 		.addQueryParam("name", "name to 2")
 		.addQueryParam("tid", "2")
-		.as(BodyCodec.jsonObject()).send(res -> {
+		.as(BodyCodec.jsonObject())
+		.send(res -> {
 			if (res.succeeded()) {
 				context.assertEquals(200, res.result().statusCode());
 				JsonObject body = res.result().body();
@@ -64,10 +70,13 @@ public class UserRouterTest {
 			}
 		});
 	}
+
 	@Test
 	public void testFind(TestContext context) {
 		Async async = context.async();
-		webClient.get("/user/find").as(BodyCodec.jsonObject()).send(res -> {
+		webClient.get("/user/find")
+		.as(BodyCodec.jsonObject())
+		.send(res -> {
 			if (res.succeeded()) {
 				context.assertEquals(200, res.result().statusCode());
 				JsonObject body = res.result().body();
@@ -84,8 +93,9 @@ public class UserRouterTest {
 	public void testGet(TestContext context) {
 		Async async = context.async();
 		webClient.get("/user/get")
-		.addQueryParam("id", "1")
-		.as(BodyCodec.jsonObject()).send(res -> {
+		.addQueryParam("id", ID)
+		.as(BodyCodec.jsonObject())
+		.send(res -> {
 			if (res.succeeded()) {
 				context.assertEquals(200, res.result().statusCode());
 				JsonObject body = res.result().body();
@@ -97,12 +107,15 @@ public class UserRouterTest {
 			}
 		});
 	}
-	
+
 	@Test
 	public void testLimit(TestContext context) {
 		Async async = context.async();
 		webClient.get("/user/limit")
-		.as(BodyCodec.jsonObject()).send(res -> {
+		.addQueryParam("page", "1")
+		.addQueryParam("rowSize", "10")
+		.as(BodyCodec.jsonObject())
+		.send(res -> {
 			if (res.succeeded()) {
 				context.assertEquals(200, res.result().statusCode());
 				JsonObject body = res.result().body();
@@ -114,6 +127,5 @@ public class UserRouterTest {
 			}
 		});
 	}
-	
 
 }
