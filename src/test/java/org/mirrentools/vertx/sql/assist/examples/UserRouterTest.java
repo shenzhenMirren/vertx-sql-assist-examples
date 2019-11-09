@@ -26,7 +26,44 @@ public class UserRouterTest {
 		options.setDefaultHost("localhost").setDefaultPort(8080);
 		webClient = WebClient.create(vertx, options);
 	}
-
+	@Test
+	public void testSave(TestContext context) {
+		Async async = context.async();
+		webClient.post("/user/save")
+		.addQueryParam("id", "1")
+		.addQueryParam("name", "name")
+		.addQueryParam("tid", "1")
+		.as(BodyCodec.jsonObject()).send(res -> {
+			if (res.succeeded()) {
+				context.assertEquals(200, res.result().statusCode());
+				JsonObject body = res.result().body();
+				System.out.println("testSave: " + body);
+				context.assertEquals(200, body.getInteger(CODE_KEY));
+				async.complete();
+			} else {
+				context.fail(res.cause());
+			}
+		});
+	}
+	@Test
+	public void testUpdate(TestContext context) {
+		Async async = context.async();
+		webClient.post("/user/update")
+		.addQueryParam("id", "1")
+		.addQueryParam("name", "name to 2")
+		.addQueryParam("tid", "2")
+		.as(BodyCodec.jsonObject()).send(res -> {
+			if (res.succeeded()) {
+				context.assertEquals(200, res.result().statusCode());
+				JsonObject body = res.result().body();
+				System.out.println("testUpdate: " + body);
+				context.assertEquals(200, body.getInteger(CODE_KEY));
+				async.complete();
+			} else {
+				context.fail(res.cause());
+			}
+		});
+	}
 	@Test
 	public void testFind(TestContext context) {
 		Async async = context.async();
@@ -77,42 +114,6 @@ public class UserRouterTest {
 			}
 		});
 	}
-	@Test
-	public void testSave(TestContext context) {
-		Async async = context.async();
-		webClient.post("/user/save")
-		.addQueryParam("name", "name")
-		.addQueryParam("tid", "1")
-		.as(BodyCodec.jsonObject()).send(res -> {
-			if (res.succeeded()) {
-				context.assertEquals(200, res.result().statusCode());
-				JsonObject body = res.result().body();
-				System.out.println("testSave: " + body);
-				context.assertEquals(200, body.getInteger(CODE_KEY));
-				async.complete();
-			} else {
-				context.fail(res.cause());
-			}
-		});
-	}
-	@Test
-	public void testUpdate(TestContext context) {
-		Async async = context.async();
-		webClient.post("/user/update")
-		.addQueryParam("id", "13")
-		.addQueryParam("name", "13")
-		.addQueryParam("tid", "13")
-		.as(BodyCodec.jsonObject()).send(res -> {
-			if (res.succeeded()) {
-				context.assertEquals(200, res.result().statusCode());
-				JsonObject body = res.result().body();
-				System.out.println("testUpdate: " + body);
-				context.assertEquals(200, body.getInteger(CODE_KEY));
-				async.complete();
-			} else {
-				context.fail(res.cause());
-			}
-		});
-	}
+	
 
 }
