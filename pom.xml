@@ -20,7 +20,7 @@
 		<dependency>
 			<groupId>org.mirrentools</groupId>
 			<artifactId>vertx-sql-assist</artifactId>
-			<version>1.0.0</version>
+			<version>RELEASE</version>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
