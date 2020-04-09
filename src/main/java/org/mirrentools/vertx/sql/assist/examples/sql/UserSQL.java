@@ -6,9 +6,8 @@ import io.vertx.ext.jdbc.JDBCClient;
 import io.vertx.ext.sql.assist.CommonSQL;
 import io.vertx.ext.sql.assist.SQLExecute;
 
-public class UserSQL extends CommonSQL<JDBCClient> {
+public class UserSQL extends CommonSQL<User, JDBCClient> {
 	public UserSQL(SQLExecute<JDBCClient> execute) {
-		super(User.class, execute);
+		super(execute);
 	}
-
 }

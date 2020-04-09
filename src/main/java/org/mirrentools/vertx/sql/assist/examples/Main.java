@@ -23,15 +23,11 @@ public class Main {
 				// 账户与密码
 				.put("user", "root").put("password", "root");
 		/*
-		 * 创建表的SQL语句
-		 CREATE TABLE uuser (
-		   id BIGINT(20) NOT NULL PRIMARY KEY , 
-		   name VARCHAR(50) NOT NULL, 
-		   type INT(11) 
-		 )
+		 * 创建表的SQL语句 CREATE TABLE uuser ( id BIGINT(20) NOT NULL PRIMARY KEY , name
+		 * VARCHAR(50) NOT NULL, type INT(11) )
 		 */
 		JDBCClient jdbcClient = JDBCClient.createShared(vertx, config);
-		SQLExecute<JDBCClient> execute = SQLExecute.create(jdbcClient);
+		SQLExecute<JDBCClient> execute = SQLExecute.createJDBC(jdbcClient);
 		Router router = Router.router(vertx);
 		UserRouter.startService(router, execute);
 		vertx.createHttpServer().requestHandler(router).listen(8080);
