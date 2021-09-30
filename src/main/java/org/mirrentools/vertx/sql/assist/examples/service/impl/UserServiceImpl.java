@@ -3,6 +3,8 @@ package org.mirrentools.vertx.sql.assist.examples.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.mirrentools.vertx.sql.assist.examples.entity.User;
 import org.mirrentools.vertx.sql.assist.examples.service.UserService;
 import org.mirrentools.vertx.sql.assist.examples.sql.UserSQL;
@@ -12,11 +14,9 @@ import io.vertx.core.Future;
 import io.vertx.core.Handler;
 import io.vertx.core.MultiMap;
 import io.vertx.core.json.JsonObject;
-import io.vertx.core.logging.Logger;
-import io.vertx.core.logging.LoggerFactory;
-import io.vertx.ext.jdbc.JDBCClient;
 import io.vertx.ext.sql.assist.SQLExecute;
 import io.vertx.ext.sql.assist.SqlAssist;
+import io.vertx.jdbcclient.JDBCPool;
 
 /**
  * 数据服务接口的默认实现
@@ -26,7 +26,7 @@ import io.vertx.ext.sql.assist.SqlAssist;
  */
 public class UserServiceImpl implements UserService {
 	/** 日志工具 */
-	private final Logger LOG = LoggerFactory.getLogger(this.getClass());
+	private static final Logger LOG = LogManager.getLogger(UserServiceImpl.class);	
 	/** SQL操作语句 */
 	private UserSQL userSQL;
 
@@ -35,7 +35,7 @@ public class UserServiceImpl implements UserService {
 	 * 
 	 * @param execute
 	 */
-	public UserServiceImpl(SQLExecute<JDBCClient> execute) {
+	public UserServiceImpl(SQLExecute<JDBCPool> execute) {
 		super();
 		this.userSQL = new UserSQL(execute);
 	}

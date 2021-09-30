@@ -9,6 +9,7 @@ import io.vertx.core.json.JsonObject;
 import io.vertx.ext.jdbc.JDBCClient;
 import io.vertx.ext.sql.assist.SQLExecute;
 import io.vertx.ext.web.Router;
+import io.vertx.jdbcclient.JDBCPool;
 
 public class Main {
 	public static void main(String[] args) {
@@ -23,11 +24,14 @@ public class Main {
 				// 账户与密码
 				.put("user", "root").put("password", "root");
 		/*
-		 * 创建表的SQL语句 CREATE TABLE uuser ( id BIGINT(20) NOT NULL PRIMARY KEY , name
-		 * VARCHAR(50) NOT NULL, type INT(11) )
-		 */
-		JDBCClient jdbcClient = JDBCClient.createShared(vertx, config);
-		SQLExecute<JDBCClient> execute = SQLExecute.createJDBC(jdbcClient);
+		  创建表的SQL语句 
+		  CREATE TABLE uuser ( 
+		  id BIGINT(20) NOT NULL PRIMARY KEY , 
+		  name VARCHAR(50) NOT NULL, 
+		  type INT(11) )
+		*/
+		JDBCPool jdbcPool = JDBCPool.pool(vertx, config);
+		SQLExecute<JDBCPool> execute = SQLExecute.createJDBC(jdbcPool);	
 		Router router = Router.router(vertx);
 		UserRouter.startService(router, execute);
 		vertx.createHttpServer().requestHandler(router).listen(8080);

@@ -1,15 +1,15 @@
 package org.mirrentools.vertx.sql.assist.examples.router;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.mirrentools.vertx.sql.assist.examples.service.UserService;
 
 import io.vertx.core.MultiMap;
 import io.vertx.core.http.HttpHeaders;
-import io.vertx.core.logging.Logger;
-import io.vertx.core.logging.LoggerFactory;
-import io.vertx.ext.jdbc.JDBCClient;
 import io.vertx.ext.sql.assist.SQLExecute;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
+import io.vertx.jdbcclient.JDBCPool;
 
 /**
  * User的接口服务
@@ -19,13 +19,15 @@ import io.vertx.ext.web.RoutingContext;
  */
 public class UserRouter {
 	/** 日志工具 */
-	private final Logger LOG = LoggerFactory.getLogger(this.getClass());
+	private static final Logger LOG = LogManager.getLogger(UserRouter.class);
+	
+	
 	/** 数据服务接口 */
 	private UserService service;
 
-	private UserRouter(UserService service) {
+	private UserRouter(SQLExecute<JDBCPool> execute) {
 		super();
-		this.service = service;
+		this.service = UserService.create(execute);
 	}
 
 	/**
@@ -36,8 +38,8 @@ public class UserRouter {
 	 * @param execute
 	 *          数据执行器
 	 */
-	public static void startService(Router router, SQLExecute<JDBCClient> execute) {
-		UserRouter instance = new UserRouter(UserService.create(execute));
+	public static void startService(Router router, SQLExecute<JDBCPool> execute) {
+		UserRouter instance = new UserRouter(execute);
 		// 获取所有数据
 		router.get("/user/find").handler(instance::find);
 		// 获取指定数据
